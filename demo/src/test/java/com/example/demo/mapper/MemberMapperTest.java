@@ -24,16 +24,17 @@ class MemberMapperTest {
     @Test
     @DisplayName("ALL READ: 전체 데이타 조회")
     void findAll() {
-        // 이 상황에서 -> 이런 행동을 하면 -> 이런 결과가 나와야한다.
+        // 이 상항에서 -> 이런 행동을하면 -> 이런 결과가 나와야한다.
 
-        // given -> 테스트에 필요한 모든 조건을 만드는 단계
+        //given -> 테스트에 필요한 모든 조건을 만드는 단계
 
-        // when -> 테스트 대상 동작 실행(실제로 검증하고 싶은 행동을 수행하는 단계)
+        //when -> 테스트 대상 동작 실행(실제로 검증하고 싶은 행동을 수행하는 단계)
         List<MemberDTO> list = memberMapper.findAll();
 
-        // then -> 검증 결과 단계
-        Assertions.assertNotNull(list);
+        //then -> 검증 결과 단계
+        Assertions.assertNotNull(list);  //null만 아니면 OK
 
         list.forEach( m -> log.info(m));
+
     }
 }
