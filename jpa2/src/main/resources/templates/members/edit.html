@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Edit Member</title>
+
+    <style>
+        :root{
+            --bg:#f6f7fb;
+            --card:#ffffff;
+            --text:#0f172a;
+            --muted:#64748b;
+            --line:#e2e8f0;
+            --primary:#2563eb;
+            --danger:#ef4444;
+            --shadow:0 16px 40px rgba(15,23,42,.08);
+            --radius:18px;
+        }
+        *{box-sizing:border-box}
+        body{
+            margin:0;
+            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+            color:var(--text);
+            background:
+                    radial-gradient(1200px 600px at 15% 10%, #e8ecff 0%, transparent 60%),
+                    radial-gradient(1000px 600px at 85% 15%, #dff2ff 0%, transparent 55%),
+                    linear-gradient(180deg, #f7f8ff, var(--bg));
+            min-height:100vh;
+        }
+        .wrap{max-width:980px; margin:0 auto; padding:28px 18px 60px;}
+        .top{
+            display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+            margin-bottom:14px;
+        }
+        h1{margin:0; font-size:28px; letter-spacing:-.3px;}
+        .sub{margin:6px 0 0; color:var(--muted); font-size:14px;}
+        .card{
+            background:var(--card);
+            border:1px solid rgba(226,232,240,.85);
+            border-radius:var(--radius);
+            box-shadow:var(--shadow);
+            overflow:hidden;
+        }
+        .toolbar{
+            display:flex; justify-content:space-between; align-items:center; gap:10px;
+            padding:14px 16px;
+            border-bottom:1px solid var(--line);
+            background:linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.85));
+            backdrop-filter: blur(6px);
+        }
+        .badge{
+            display:inline-flex; align-items:center; gap:8px;
+            padding:8px 10px;
+            border-radius:999px;
+            border:1px solid rgba(226,232,240,.9);
+            background:#fff;
+            color:var(--muted);
+            font-size:12px;
+            font-weight:800;
+        }
+        .btn{
+            border:none; cursor:pointer;
+            padding:10px 12px;
+            border-radius:14px;
+            font-weight:700;
+            font-size:14px;
+            transition:.15s ease;
+            display:inline-flex; align-items:center; gap:8px;
+            text-decoration:none;
+            justify-content:center;
+        }
+        .btn-primary{background:var(--primary); color:#fff;}
+        .btn-primary:hover{filter:brightness(.95)}
+        .btn-ghost{
+            background:#fff; color:var(--text);
+            border:1px solid var(--line);
+        }
+        .btn-ghost:hover{background:#f8fafc}
+        .btn-danger{
+            background:#fff; color:var(--danger);
+            border:1px solid rgba(239,68,68,.35);
+        }
+        .btn-danger:hover{background:rgba(239,68,68,.06)}
+        .content{padding:18px 16px 20px;}
+        .grid{
+            display:grid;
+            grid-template-columns: 1fr 1fr;
+            gap:14px;
+        }
+        .field{display:flex; flex-direction:column; gap:8px;}
+        .label{
+            font-size:12px; font-weight:900;
+            color:var(--muted);
+            letter-spacing:.08em;
+            text-transform:uppercase;
+        }
+        .input{
+            border:1px solid var(--line);
+            border-radius:14px;
+            padding:12px 12px;
+            font-size:14px;
+            outline:none;
+            background:#fff;
+            transition:.15s ease;
+        }
+        .input:focus{
+            border-color: rgba(37, 99, 235, .45);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .10);
+        }
+        .hint{font-size:12px; color:var(--muted); margin-top:-2px}
+        .span-2{grid-column: 1 / span 2;}
+        .footer{
+            display:flex; justify-content:space-between; align-items:center; gap:10px;
+            padding:14px 16px;
+            border-top:1px solid var(--line);
+            background:#fbfdff;
+        }
+        .mono{font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;}
+        @media (max-width:720px){
+            .grid{grid-template-columns: 1fr;}
+            .span-2{grid-column:auto;}
+            .footer{flex-direction:column;}
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrap">
+    <div class="top">
+        <div>
+            <h1>Edit Member</h1>
+            <p class="sub">기존 정보를 유지하면서 필요한 부분만 수정해요.</p>
+        </div>
+        <a class="btn btn-ghost" th:href="@{/members/list}">← 목록</a>
+    </div>
+
+    <div class="card">
+        <div class="toolbar">
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <div style="font-weight:800;">회원 수정</div>
+                <div class="badge">
+                    ID <span class="mono" th:text="${member.memberId}">1</span>
+                </div>
+            </div>
+
+            <!-- 삭제를 여기서도 가능하게 하고 싶으면 폼 추가 -->
+            <form th:action="@{/members/delete/{id}(id=${member.memberId})}" method="post" style="margin:0"
+                  onsubmit="return confirm('정말 삭제할까요?');">
+                <button class="btn btn-danger" type="submit">삭제</button>
+            </form>
+        </div>
+
+        <!-- ✅ 수정 저장 -->
+        <form th:action="@{/members/edit/{id}(id=${member.memberId})}" th:object="${member}" method="post">
+            <div class="content">
+                <div class="grid">
+                    <!-- memberId: 수정 불가 -->
+                    <div class="field">
+                        <div class="label">MEMBER ID</div>
+                        <input class="input mono" type="text" th:value="*{memberId}" readonly>
+                        <div class="hint">ID는 자동 생성값이라 수정할 수 없어요.</div>
+                    </div>
+
+                    <!-- name -->
+                    <div class="field">
+                        <div class="label">NAME *</div>
+                        <input class="input" type="text" th:field="*{name}" required maxlength="50">
+                        <div class="hint">이름은 필수예요. (최대 50자)</div>
+                    </div>
+
+                    <!-- age -->
+                    <div class="field">
+                        <div class="label">AGE</div>
+                        <input class="input mono" type="number" th:field="*{age}" min="0" max="150">
+                        <div class="hint">숫자만 입력.</div>
+                    </div>
+
+                    <!-- phone -->
+                    <div class="field">
+                        <div class="label">PHONE</div>
+                        <input class="input mono" type="text" th:field="*{phone}" placeholder="010-0000-0000">
+                        <div class="hint">형식 제한 없이 입력.</div>
+                    </div>
+
+                    <!-- address -->
+                    <div class="field span-2">
+                        <div class="label">ADDRESS</div>
+                        <input class="input" type="text" th:field="*{address}" placeholder="예) 천호동">
+                        <div class="hint">주소는 선택 항목이에요.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <a class="btn btn-ghost" th:href="@{/members/list}">취소</a>
+                <button class="btn btn-primary" type="submit">수정 저장</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
