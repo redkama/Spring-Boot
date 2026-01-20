@@ -27,7 +27,7 @@ public class MemberService {
         memberMapper.update(memberDTO);
     }
 
-    public void insert(MemberDTO memberDTO) { memberMapper.insert(memberDTO); }
-
-    public void deleteById(int id) { memberMapper.delete(id); }
+    public void deleteById(int id) {
+        memberMapper.delete(id);
+    }
 }

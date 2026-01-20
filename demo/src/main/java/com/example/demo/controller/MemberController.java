@@ -2,15 +2,16 @@ package com.example.demo.controller;
 
 import com.example.demo.domain.MemberDTO;
 import com.example.demo.service.MemberService;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -38,33 +39,20 @@ public class MemberController {
     }
 
     @PostMapping("/update")
-    public String updatePost(MemberDTO memberDTO){
+    public String updatePost(@ModelAttribute MemberDTO memberDTO){
 
         memberService.update(memberDTO);
 
         return "redirect:/member/list";
     }
 
-    @GetMapping("/insert")
-    public String insertForm(Model model) {
-
-        model.addAttribute("member", new MemberDTO());
-        return "member/insert";
-    }
-
-    @PostMapping("/insert")
-    public String insertPost(MemberDTO memberDTO){
-
-        memberService.insert(memberDTO);
-
-        return "redirect:/member/list";
-    }
-
+    //http://localhost:8080/member/delete/7
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable int id) {
+    public String delete(@PathVariable int id){
         memberService.deleteById(id);
         return "redirect:/member/list";
     }
+
 }
 
 

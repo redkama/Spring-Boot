@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @Log4j2
@@ -50,19 +49,18 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-    //전체 데이타 조회(페이징 처리 포함)
+    //전체 데이터 조회(페이징 처리 포함)
     public Page<Member> findByAll(Pageable pageable){
 
-        log.info("-----------------findByAll-------------------------");
-        log.info("pageable : " + pageable);
+        log.info("---------------------------------------------");
+        log.info("pareable : " + pageable);
 
+        //페이징 코드는 이거 하나다
         Page<Member> memberPage = memberRepository.findAll(pageable);
 
-        log.info("memberPage : " + memberPage);
-        log.info("-----------------end findByAll-------------------------");
+        log.info("memberPage : " + memberPage );
+        log.info("----------------------------------------------");
 
         return memberPage;
     }
-
-
 }
