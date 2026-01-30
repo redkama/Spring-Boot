@@ -34,9 +34,10 @@ public class ItemController {
     }
 
     @PostMapping(value = "/admin/item/new")
-    public String itemForm(@Valid ItemFormDto itemFormDto,
-                           BindingResult bindingResult, Model model,
-                           @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList){
+    public String itemForm(@Valid  @ModelAttribute("itemFormDto") ItemFormDto itemFormDto,
+                           BindingResult bindingResult,
+                           @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
+                           Model model){
 
         if(bindingResult.hasErrors()){
             return "item/itemForm";
@@ -72,9 +73,10 @@ public class ItemController {
     }
 
     @PostMapping(value = "/admin/item/{itemId}")
-    public String itemUpdate(@Valid ItemFormDto itemFormDto,
-                           BindingResult bindingResult, Model model,
-                           @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList){
+    public String itemUpdate(@Valid @ModelAttribute ItemFormDto itemFormDto,
+                               BindingResult bindingResult,
+                               @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
+                               Model model){
 
         if(bindingResult.hasErrors()){
             return "item/itemForm";
@@ -94,9 +96,9 @@ public class ItemController {
         return "redirect:/";
     }
 
-    @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
+    @GetMapping(value = {"/admin/items", "/admin/items/{page}"} )
     public String itemManage(ItemSearchDto itemSearchDto,
-                             @PathVariable("page")Optional<Integer> page,
+                             @PathVariable("page") Optional<Integer> page,
                              Model model){
         //전달받은 page가있으면 그 값을 사용하고 없으면 0, 페이지당 3개 상품 가져오기
 
@@ -109,6 +111,12 @@ public class ItemController {
 
         Page<Item> items = itemService.getAdminItemPage(itemSearchDto, pageable);
 
+        log.info("------item-------------");
+        log.info(items.getContent());
+        log.info(items.getTotalElements());
+        log.info(items.getTotalPages());
+        log.info(items.getNumber());
+
         model.addAttribute("items", items);
         model.addAttribute("itemSearchDto", itemSearchDto);
         model.addAttribute("maxPage", 5);
@@ -118,7 +126,13 @@ public class ItemController {
 
     @GetMapping(value = "/item/{itemId}")
     public String itemDtl(@PathVariable("itemId") Long itemId, Model model){
+
+        log.info("itemDtl : " + itemId);
+
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
+
+        log.info("itemFormDto : " + itemFormDto);
+
         model.addAttribute("item", itemFormDto);
         return "item/itemDtl";
     }
